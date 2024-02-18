@@ -18,19 +18,64 @@ class StudentService {
     this.prisma = new PrismaClient();
   }
 
-  private async findUserbyEmail(
+  private async getStudentByEmail(
     email: string,
   ): Promise<Prisma.StudentWhereUniqueInput> {
     const result = await this.prisma.student.findUnique({ where: { email } });
     return result;
   }
 
-  async register(student): Promise<any> {
+  async getStudentById(studentId: string) {
+    try {
+      console.log(`StudentService.getStudentById: ${studentId}`);
+
+      const result = await this.prisma.student.findUnique({
+        where: {
+          id: studentId,
+        },
+      });
+
+      if (!result) {
+        throw new HttpException('Student not found!', 404);
+      }
+
+      return result;
+    } catch (error) {
+      console.error(`StudentService.getStudentById: ${JSON.stringify(error)}`);
+      throw new HttpException('Internal Server Error', 500);
+    }
+  }
+
+  async updateStudentById(studentId, student) {
+    try {
+      console.log(`StudentService.updateStudentById: ${studentId}`);
+
+      const result = await this.prisma.student.update({
+        where: {
+          id: studentId,
+        },
+        data: student,
+      });
+
+      if (!result) {
+        throw new HttpException('Student not found!', 404);
+      }
+
+      return result;
+    } catch (error) {
+      console.error(
+        `StudentService.updateStudentById: ${JSON.stringify(error)}`,
+      );
+      throw new HttpException('Internal Server Error', 500);
+    }
+  }
+
+  async register(schoolId, student): Promise<any> {
     try {
       console.log(`StudentService.register`);
-      const newUser = await this.prisma.school.update({
+      await this.prisma.school.update({
         where: {
-          id: '65d1841f3b85a527d12d9052',
+          id: schoolId,
         },
         data: {
           students: {
@@ -38,20 +83,12 @@ class StudentService {
           },
         },
       });
-      // const newUser = await this.prisma.school.update({
-      //   where: {
-      //     id: '65d17c093c311ce816a49095',
-      //   },
-      //   data: {
-      //     student: {
-      //       create: student,
-      //     },
-      //   },
-      // });
-      console.log(newUser);
-      return newUser;
-      // const token = this.login({ email, password });
-      // return token;
+
+      const token = this.login({
+        email: student.email,
+        password: student.password,
+      });
+      return token;
     } catch (error) {
       console.log(error);
       console.error(`StudentService.register: ${JSON.stringify(error)}`);
@@ -63,14 +100,13 @@ class StudentService {
     try {
       console.log(`StudentService.login`);
 
-      // find user by email
-      const user = await this.findUserbyEmail(email);
+      const result = await this.getStudentByEmail(email);
 
-      if (!user) {
+      if (!result) {
         throw new HttpException('User not found!', 404);
       }
 
-      const token = this.generateToken({ email, password });
+      const token = this.generateToken(result);
       return token;
     } catch (error) {
       console.error(`StudentService.login: ${JSON.stringify(error)}`);

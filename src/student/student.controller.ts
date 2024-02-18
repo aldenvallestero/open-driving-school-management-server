@@ -1,7 +1,11 @@
 import {
   Body,
   Controller,
+  Get,
+  Param,
   Post,
+  Put,
+  Query,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -18,8 +22,25 @@ export class StudentController {
   async login(@Body() loginData: LoginDto) {
     return await this.studentService.login(loginData);
   }
+
   @Post('register')
-  async register(@Body() registerData: RegisterDto) {
-    return await this.studentService.register(registerData);
+  async register(
+    @Query('schoolId') schoolId: string,
+    @Body() registerData: RegisterDto,
+  ) {
+    return await this.studentService.register(schoolId, registerData);
+  }
+
+  @Get(':id')
+  async getStudentById(@Param('id') studentId: string) {
+    return await this.studentService.getStudentById(studentId);
+  }
+
+  @Put(':id')
+  async updateStudentById(
+    @Param('id') studentId: string,
+    @Body() studentData: RegisterDto,
+  ) {
+    return await this.studentService.updateStudentById(studentId, studentData);
   }
 }

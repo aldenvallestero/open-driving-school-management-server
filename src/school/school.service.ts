@@ -61,6 +61,44 @@ class SchoolService {
     }
   }
 
+  async createCourse({ schoolId, course }): Promise<any> {
+    try {
+      console.log(`SchoolService.createCourse`);
+      const newCourse = await this.prisma.school.update({
+        where: {
+          id: schoolId,
+        },
+        data: {
+          courses: {
+            create: course,
+          },
+        },
+      });
+      return newCourse;
+    } catch (error) {
+      console.log(error);
+      console.error(`SchoolService.createCourse: ${JSON.stringify(error)}`);
+      throw new HttpException('Internal Server Error', 500);
+    }
+  }
+
+  async updateCourse({ id, ...course }): Promise<any> {
+    try {
+      console.log(`SchoolService.updateCourse`);
+      const newCourse = await this.prisma.course.update({
+        where: {
+          id,
+        },
+        data: course,
+      });
+      return newCourse;
+    } catch (error) {
+      console.log(error);
+      console.error(`SchoolService.updateCourse: ${JSON.stringify(error)}`);
+      throw new HttpException('Internal Server Error', 500);
+    }
+  }
+
   private generateToken(payload: object) {
     try {
       console.log(`TokenService.generateToken: ${JSON.stringify(payload)}`);

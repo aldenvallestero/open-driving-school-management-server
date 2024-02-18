@@ -14,7 +14,10 @@ model School {
   address String
   email String @unique
   password String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   students Student[]
+  courses Course[]
 }
 
 model Student {
@@ -24,6 +27,19 @@ model Student {
   address String
   email String @unique
   password String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  school School @relation(fields: [schoolId], references: [id])
+  schoolId String @db.ObjectId
+}
+
+model Course {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+  description String
+  price Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   school School @relation(fields: [schoolId], references: [id])
   schoolId String @db.ObjectId
 }
