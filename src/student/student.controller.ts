@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Param,
+  Patch,
   Post,
   Put,
   Query,
@@ -36,11 +37,26 @@ export class StudentController {
     return await this.studentService.getStudentById(studentId);
   }
 
+  @Get('all/:id')
+  async getAllStudentsBySchoolId(@Param('id') schoolId: string) {
+    return await this.studentService.getAllStudentsBySchoolId(schoolId);
+  }
+
   @Put(':id')
   async updateStudentById(
     @Param('id') studentId: string,
     @Body() studentData: RegisterDto,
   ) {
     return await this.studentService.updateStudentById(studentId, studentData);
+  }
+
+  @Patch('/in')
+  async attendanceIn(@Body() attendanceData) {
+    return await this.studentService.attendanceIn(attendanceData);
+  }
+
+  @Patch('/out/:id')
+  async attendanceOut(@Param() attendanceId: string) {
+    return await this.studentService.attendanceOut(attendanceId);
   }
 }

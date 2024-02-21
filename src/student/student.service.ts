@@ -46,6 +46,29 @@ class StudentService {
     }
   }
 
+  async getAllStudentsBySchoolId(schoolId: string) {
+    try {
+      console.log(`StudentService.getAllStudentsBySchoolId: ${schoolId}`);
+
+      const result = await this.prisma.student.findMany({
+        where: {
+          schoolId,
+        },
+      });
+
+      if (!result) {
+        throw new HttpException('No students found!', 404);
+      }
+
+      return result;
+    } catch (error) {
+      console.error(
+        `StudentService.getAllStudentsBySchoolId: ${JSON.stringify(error)}`,
+      );
+      throw new HttpException('Internal Server Error', 500);
+    }
+  }
+
   async updateStudentById(studentId, student) {
     try {
       console.log(`StudentService.updateStudentById: ${studentId}`);
@@ -128,6 +151,29 @@ class StudentService {
 
   validateToken(token: string) {
     console.log(`TokenService.validateToken: ${token}`);
+  }
+
+  async attendanceIn({ schoolId, studentId, courseId }) {
+    await this.prisma.attendance.create({
+      data: {
+        schoolId,
+        studentId,
+        courseId,
+        in: new Date(),
+        out: new Date(),
+      },
+    });
+  }
+
+  async attendanceOut(id) {
+    await this.prisma.attendance.update({
+      where: {
+        id,
+      },
+      data: {
+        out: new Date(),
+      },
+    });
   }
 }
 
