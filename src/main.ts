@@ -8,7 +8,7 @@ async function bootstrap() {
     process.env.webste_port ||
     process.env.PORT ||
     process.env.port ||
-    8080;
+    80;
   await app.listen(PORT, () => {
     console.log('Server started running on port', PORT);
   });
