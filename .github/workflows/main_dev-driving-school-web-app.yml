@@ -48,6 +48,10 @@ jobs:
       - name: Unzip artifact for deployment
         run: unzip release.zip
       
+      - name: build me
+        run: |
+          npm run build --if-present
+      
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
