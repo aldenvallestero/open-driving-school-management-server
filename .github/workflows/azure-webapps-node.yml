@@ -56,12 +56,6 @@ jobs:
     - name: Unzip artifact for deployment
       run: unzip release.zip
 
-    - name: npm install, build, and test
-      run: |
-        npm install -g @nestjs/cli
-        npm install
-        npm run build
-
     - name: 'Deploy to Azure WebApp'
       id: deploy-to-webapp
       uses: azure/webapps-deploy@v2
