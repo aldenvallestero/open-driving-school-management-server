@@ -2,37 +2,32 @@ import { Injectable } from '@nestjs/common';
 import * as jwt from 'jsonwebtoken';
 import * as fs from 'fs';
 import { HttpException } from '@nestjs/common';
-import { Prisma, PrismaClient } from '@prisma/client';
 
 @Injectable()
 class SchoolService {
   privateKey;
   publicKey;
   algorithm;
-  prisma: PrismaClient;
 
   constructor() {
     this.privateKey = fs.readFileSync('private.key', 'utf8');
     this.publicKey = fs.readFileSync('public.key', 'utf8');
     this.algorithm = { algorithm: 'RS256' };
-    this.prisma = new PrismaClient();
   }
 
-  private async findUserbyEmail(
-    email: string,
-  ): Promise<Prisma.SchoolWhereUniqueInput> {
-    const result = await this.prisma.school.findUnique({ where: { email } });
-    return result;
+  private async findUserbyEmail(email: string) {
+    // const result = await this.prisma.school.findUnique({ where: { email } });
+    // return result;
   }
 
   async register(school): Promise<any> {
     try {
       console.log(`SchoolService.register`);
-      const newUser = await this.prisma.school.create({
-        data: school,
-      });
-      console.log(newUser);
-      return newUser;
+      // const newUser = await this.prisma.school.create({
+      //   data: school,
+      // });
+      // console.log(newUser);
+      // return newUser;
       // const token = this.login({ email, password });
       // return token;
     } catch (error) {
@@ -42,19 +37,18 @@ class SchoolService {
     }
   }
 
-  async login({ email, password }): Promise<string> {
+  async login({ email, password }) {
     try {
       console.log(`SchoolService.login`);
 
-      // find user by email
-      const user = await this.findUserbyEmail(email);
+      // const user = await this.findUserbyEmail(email);
 
-      if (!user) {
-        throw new HttpException('User not found!', 404);
-      }
+      // if (!user) {
+      //   throw new HttpException('User not found!', 404);
+      // }
 
-      const token = this.generateToken({ email, password });
-      return token;
+      // const token = this.generateToken({ email, password });
+      // return token;
     } catch (error) {
       console.error(`SchoolService.login: ${JSON.stringify(error)}`);
       throw new HttpException('Internal Server Error', 500);
@@ -64,17 +58,17 @@ class SchoolService {
   async createCourse({ schoolId, course }): Promise<any> {
     try {
       console.log(`SchoolService.createCourse`);
-      const newCourse = await this.prisma.school.update({
-        where: {
-          id: schoolId,
-        },
-        data: {
-          courses: {
-            create: course,
-          },
-        },
-      });
-      return newCourse;
+      // const newCourse = await this.prisma.school.update({
+      //   where: {
+      //     id: schoolId,
+      //   },
+      //   data: {
+      //     courses: {
+      //       create: course,
+      //     },
+      //   },
+      // });
+      // return newCourse;
     } catch (error) {
       console.log(error);
       console.error(`SchoolService.createCourse: ${JSON.stringify(error)}`);
@@ -85,13 +79,13 @@ class SchoolService {
   async updateCourse({ id, ...course }): Promise<any> {
     try {
       console.log(`SchoolService.updateCourse`);
-      const newCourse = await this.prisma.course.update({
-        where: {
-          id,
-        },
-        data: course,
-      });
-      return newCourse;
+      // const newCourse = await this.prisma.course.update({
+      //   where: {
+      //     id,
+      //   },
+      //   data: course,
+      // });
+      // return newCourse;
     } catch (error) {
       console.log(error);
       console.error(`SchoolService.updateCourse: ${JSON.stringify(error)}`);
@@ -115,20 +109,20 @@ class SchoolService {
     try {
       console.log(`SchoolService.getSchoolById: ${schoolId}`);
 
-      const result = await this.prisma.school.findUnique({
-        where: {
-          id: schoolId,
-        },
-        include: {
-          students: true,
-        },
-      });
+      // const result = await this.prisma.school.findUnique({
+      //   where: {
+      //     id: schoolId,
+      //   },
+      //   include: {
+      //     students: true,
+      //   },
+      // });
 
-      if (!result) {
-        throw new HttpException('School not found!', 404);
-      }
+      // if (!result) {
+      //   throw new HttpException('School not found!', 404);
+      // }
 
-      return result;
+      // return result;
     } catch (error) {
       console.error(`SchoolService.getSchoolById: ${JSON.stringify(error)}`);
       throw new HttpException('Internal Server Error', 500);
