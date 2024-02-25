@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - DEV
   workflow_dispatch:
 
 jobs:
@@ -20,7 +21,6 @@ jobs:
 
       - name: npm install, build, and test
         run: |
-          npm install -g @nestjs/cli
           npm install
           npm run build
 
