@@ -4,6 +4,10 @@ import { SchoolModule } from './school/school.module';
 import { HealthController } from './health/health.controller';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
+import { ExamModule } from './exam/exam.module';
+import { AttendanceModule } from './attendance/attendance.module';
+import { CourseModule } from './course/course.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -11,6 +15,10 @@ import { MongooseModule } from '@nestjs/mongoose';
     ConfigModule.forRoot({ envFilePath: '.env', isGlobal: true }),
     StudentModule,
     SchoolModule,
+    ExamModule,
+    AttendanceModule,
+    CourseModule,
+    AuthModule,
   ],
   controllers: [HealthController],
   providers: [],

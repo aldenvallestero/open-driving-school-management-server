@@ -3,10 +3,8 @@ import {
   Controller,
   Get,
   Param,
-  Patch,
   Post,
   Put,
-  Query,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -25,11 +23,8 @@ export class StudentController {
   }
 
   @Post('register')
-  async register(
-    @Query('schoolId') schoolId: string,
-    @Body() registerData: RegisterDto,
-  ) {
-    return await this.studentService.register(schoolId, registerData);
+  async register(@Body() registerData: RegisterDto) {
+    return await this.studentService.register(registerData);
   }
 
   @Get(':id')
@@ -48,15 +43,5 @@ export class StudentController {
     @Body() studentData: RegisterDto,
   ) {
     return await this.studentService.updateStudentById(studentId, studentData);
-  }
-
-  @Patch('/in')
-  async attendanceIn(@Body() attendanceData) {
-    return await this.studentService.attendanceIn(attendanceData);
-  }
-
-  @Patch('/out/:id')
-  async attendanceOut(@Param() attendanceId: string) {
-    return await this.studentService.attendanceOut(attendanceId);
   }
 }

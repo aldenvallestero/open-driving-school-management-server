@@ -1,24 +1,19 @@
+/* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
-import * as jwt from 'jsonwebtoken';
-import * as fs from 'fs';
 import { HttpException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Student } from './student.schema';
+import { Model } from 'mongoose';
+import { School } from 'src/school/school.schema';
+import AuthService from 'src/auth/auth.service';
 
 @Injectable()
 class StudentService {
-  privateKey;
-  publicKey;
-  algorithm;
-
-  constructor() {
-    this.privateKey = fs.readFileSync('private.key', 'utf8');
-    this.publicKey = fs.readFileSync('public.key', 'utf8');
-    this.algorithm = { algorithm: 'RS256' };
-  }
-
-  private async getStudentByEmail(email: string) {
-    // const result = await this.prisma.student.findUnique({ where: { email } });
-    // return result;
-  }
+  constructor(
+    @InjectModel(Student.name) private studentModel: Model<Student>,
+    @InjectModel(School.name) private schoolModel: Model<School>,
+    private readonly authService: AuthService,
+  ) {}
 
   async getStudentById(studentId: string) {
     try {
@@ -41,21 +36,16 @@ class StudentService {
     }
   }
 
-  async getAllStudentsBySchoolId(schoolId: string) {
+  async getAllStudentsBySchoolId(school: string) {
     try {
-      console.log(`StudentService.getAllStudentsBySchoolId: ${schoolId}`);
+      console.log(`StudentService.getAllStudentsBySchoolId: ${school}`);
+      const result = await this.studentModel.find({ school }).exec();
 
-      // const result = await this.prisma.student.findMany({
-      //   where: {
-      //     schoolId,
-      //   },
-      // });
+      if (!result) {
+        throw new HttpException('No students found!', 404);
+      }
 
-      // if (!result) {
-      //   throw new HttpException('No students found!', 404);
-      // }
-
-      // return result;
+      return result;
     } catch (error) {
       console.error(
         `StudentService.getAllStudentsBySchoolId: ${JSON.stringify(error)}`,
@@ -88,25 +78,16 @@ class StudentService {
     }
   }
 
-  async register(schoolId, student): Promise<any> {
+  async register(student): Promise<string> {
     try {
-      console.log(`StudentService.register`);
-      // await this.prisma.school.update({
-      //   where: {
-      //     id: schoolId,
-      //   },
-      //   data: {
-      //     students: {
-      //       create: student,
-      //     },
-      //   },
-      // });
-
-      // const token = this.login({
-      //   email: student.email,
-      //   password: student.password,
-      // });
-      // return token;
+      console.log(`StudentService.register: ${student.name} | ${student.email}`);
+      const school = await this.schoolModel.findById(student.school);
+      student = await new this.studentModel({ ...student, school }).save();
+      await school.updateOne({
+        $push: { students: student._id },
+      });
+      const token: string = this.authService.generateToken(student);
+      return token;
     } catch (error) {
       console.log(error);
       console.error(`StudentService.register: ${JSON.stringify(error)}`);
@@ -114,61 +95,23 @@ class StudentService {
     }
   }
 
-  async login({ email, password }) {
+  async login({ email, password }): Promise<string> {
     try {
-      console.log(`StudentService.login`);
+      console.log(`StudentService.login: ${email}`);
+      const school: School = await this.schoolModel
+        .findOne({ email, password })
+        .exec();
 
-      // const result = await this.getStudentByEmail(email);
+      if (!school) {
+        throw new HttpException('Account not found!', 401);
+      }
 
-      // if (!result) {
-      //   throw new HttpException('User not found!', 404);
-      // }
-
-      // const token = this.generateToken(result);
-      // return token;
+      const token: string = this.authService.generateToken(school);
+      return token;
     } catch (error) {
       console.error(`StudentService.login: ${JSON.stringify(error)}`);
       throw new HttpException('Internal Server Error', 500);
     }
-  }
-
-  private generateToken(payload: object) {
-    try {
-      console.log(`TokenService.generateToken: ${JSON.stringify(payload)}`);
-      const token: string = jwt.sign(payload, this.privateKey, this.algorithm);
-      return token;
-    } catch (error) {
-      console.log(error);
-      console.error(`StudentService.generateToken: ${JSON.stringify(error)}`);
-      throw new HttpException('Internal Server Error', 500);
-    }
-  }
-
-  validateToken(token: string) {
-    console.log(`TokenService.validateToken: ${token}`);
-  }
-
-  async attendanceIn({ schoolId, studentId, courseId }) {
-    // await this.prisma.attendance.create({
-    //   data: {
-    //     schoolId,
-    //     studentId,
-    //     courseId,
-    //     in: new Date(),
-    //     out: new Date(),
-    //   },
-    // });
-  }
-
-  async attendanceOut(id) {
-    // await this.prisma.attendance.update({
-    //   where: {
-    //     id,
-    //   },
-    //   data: {
-    //     out: new Date(),
-    //   },
-    // });
   }
 }
 
