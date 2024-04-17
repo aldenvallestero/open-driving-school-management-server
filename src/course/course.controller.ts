@@ -1,6 +1,8 @@
 import {
   Body,
   Controller,
+  Get,
+  Param,
   Post,
   Req,
   UseGuards,
@@ -29,5 +31,16 @@ export class CourseController {
       ...createDto,
       school: payload,
     });
+  }
+
+  @UseGuards(CourseGuard)
+  @Get('/')
+  async getAllCoursesBySchoolId(@Req() { payload }) {
+    return await this.courseService.getAllCoursesBySchoolId(payload);
+  }
+
+  @Get(':id')
+  async getCourseById(@Param('id') id: string) {
+    return await this.courseService.getCourseById(id);
   }
 }

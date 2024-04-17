@@ -7,13 +7,12 @@ import {
 import AuthService from 'src/auth/auth.service';
 
 @Injectable()
-export class StudentGuard implements CanActivate {
+export class BranchGuard implements CanActivate {
   constructor(private readonly authService: AuthService) {}
   async canActivate(context: ExecutionContext) {
     const request = context.switchToHttp().getRequest();
     const { authorization } = request.headers;
     const token: string = authorization.split(' ')[1];
-
     if (!token) {
       throw new UnauthorizedException('Unauthorized!');
     }

@@ -1,10 +1,11 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
-import { Attendance } from 'src/attendance/attendance.schema';
+import { Branch } from 'src/branch/branch.schema';
 import { Course } from 'src/course/course.schema';
 import { Student } from 'src/student/student.schema';
+import { Attendance } from 'src/attendance/attendance.schema';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-@Schema()
+@Schema({ timestamps: true })
 export class School {
   @Prop({ required: true })
   name: string;
@@ -17,6 +18,9 @@ export class School {
 
   @Prop({ required: true })
   password: string;
+
+  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Branch' }] })
+  branches: Branch[];
 
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Course' }] })
   courses: Course[];

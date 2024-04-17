@@ -23,6 +23,7 @@ class AuthService {
         this.privateKey,
         this.algorithm,
       );
+
       return token;
     } catch (error) {
       console.log(error);

@@ -1,13 +1,13 @@
 import {
-  Body,
-  Controller,
   Get,
-  Param,
-  Post,
   Req,
-  UseGuards,
+  Post,
+  Body,
   UsePipes,
+  UseGuards,
+  Controller,
   ValidationPipe,
+  Param,
 } from '@nestjs/common';
 import SchoolService from './school.service';
 import { LoginDto, RegisterDto } from './dto';
@@ -32,5 +32,10 @@ export class SchoolController {
   @Get()
   async getSchool(@Req() { payload }) {
     return await this.schoolService.getSchool(payload);
+  }
+
+  @Get(':school')
+  async getSchoolById(@Param('school') school: string) {
+    return await this.schoolService.getSchoolById(school);
   }
 }

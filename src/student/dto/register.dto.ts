@@ -1,8 +1,20 @@
-import { IsEmail, IsNotEmpty } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsOptional } from 'class-validator';
 
 export class RegisterDto {
   @IsNotEmpty()
-  name: string;
+  firstName: string;
+
+  @IsOptional()
+  middleName: string;
+
+  @IsNotEmpty()
+  lastName: string;
+
+  @IsOptional()
+  marriageLastName: string;
+
+  @IsOptional()
+  suffix: string;
 
   @IsNotEmpty()
   phone: string;
@@ -10,10 +22,19 @@ export class RegisterDto {
   @IsNotEmpty()
   address: string;
 
+  @IsNotEmpty()
+  birthday: string;
+
   @IsEmail()
   @IsNotEmpty()
   email: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   password: string;
+
+  @IsOptional()
+  ltoClientId: string;
+
+  @IsNotEmpty()
+  branch: string;
 }

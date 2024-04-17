@@ -1,9 +1,15 @@
-import { Module } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
+import AuthService from 'src/auth/auth.service';
 import { CourseService } from './course.service';
+import { MongooseModule } from '@nestjs/mongoose';
 import { CourseController } from './course.controller';
 import { Course, CourseSchema } from './course.schema';
-import { MongooseModule } from '@nestjs/mongoose';
-import AuthService from 'src/auth/auth.service';
+import { CourseMiddleware } from './course.middleware';
 import { School, SchoolSchema } from 'src/school/school.schema';
 
 @Module({
@@ -16,4 +22,10 @@ import { School, SchoolSchema } from 'src/school/school.schema';
   providers: [CourseService, AuthService],
   controllers: [CourseController],
 })
-export class CourseModule {}
+export class CourseModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(CourseMiddleware)
+      .forRoutes({ path: 'course', method: RequestMethod.POST });
+  }
+}

@@ -16,11 +16,9 @@ class SchoolService {
     try {
       console.log(`SchoolService.register: ${school.name} | ${school.email}`);
       school = await new this.schoolModel(school).save();
-      console.log(school);
       const token: string = this.authService.generateToken(school);
       return token;
     } catch (error) {
-      console.log(error);
       console.error(`SchoolService.register: ${JSON.stringify(error)}`);
       throw new HttpException('Internal Server Error', 500);
     }
@@ -34,7 +32,7 @@ class SchoolService {
         .exec();
 
       if (!school) {
-        throw new HttpException('Account not found!', 401);
+        throw new HttpException('School not found!', 401);
       }
 
       const token: string = this.authService.generateToken(school);
@@ -47,11 +45,26 @@ class SchoolService {
 
   async getSchool(payload): Promise<any> {
     try {
-      console.log(`SchoolService.getSchoolById: ${JSON.stringify(payload)}`);
+      console.log(`SchoolService.getSchool: ${JSON.stringify(payload)}`);
 
       const result = await this.schoolModel.findById(payload._id).exec();
 
-      console.log('Resultaaaaaa:', result);
+      return result;
+    } catch (error) {
+      console.error(`SchoolService.getSchool: ${JSON.stringify(error)}`);
+      throw new HttpException('Internal Server Error', 500);
+    }
+  }
+
+  async getSchoolById(school): Promise<any> {
+    try {
+      console.log(`SchoolService.getSchoolById: ${school}`);
+
+      const result = await this.schoolModel
+        .findById(school)
+        .populate('courses')
+        .populate('branches')
+        .exec();
       return result;
     } catch (error) {
       console.error(`SchoolService.getSchoolById: ${JSON.stringify(error)}`);

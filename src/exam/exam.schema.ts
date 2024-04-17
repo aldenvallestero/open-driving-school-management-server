@@ -1,10 +1,11 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 import { Course } from 'src/course/course.schema';
 import { School } from 'src/school/school.schema';
 import { Student } from 'src/student/student.schema';
+import { Enrollment } from 'src/enrollment/enrollment.schema';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-@Schema()
+@Schema({ timestamps: true })
 export class Exam {
   @Prop({ required: true, default: 0 })
   score: number;
@@ -17,6 +18,9 @@ export class Exam {
 
   @Prop({ type: { type: mongoose.Schema.Types.ObjectId, ref: 'Course' } })
   course: Course;
+
+  @Prop({ type: { type: mongoose.Schema.Types.ObjectId, ref: 'Enrollment' } })
+  enrollment: Enrollment;
 
   @Prop({ type: { type: mongoose.Schema.Types.ObjectId, ref: 'Student' } })
   student: Student;

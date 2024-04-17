@@ -1,15 +1,19 @@
 import {
-  Body,
-  Controller,
   Get,
-  Param,
-  Post,
   Put,
+  Req,
+  Post,
+  Body,
+  Param,
   UsePipes,
+  UseGuards,
+  Controller,
   ValidationPipe,
+  Query,
 } from '@nestjs/common';
-import StudentService from './student.service';
 import { LoginDto } from './dto/login.dto';
+import StudentService from './student.service';
+import { StudentGuard } from './student.guard';
 import { RegisterDto } from './dto/register.dto';
 
 @UsePipes(new ValidationPipe())
@@ -27,21 +31,54 @@ export class StudentController {
     return await this.studentService.register(registerData);
   }
 
-  @Get(':id')
-  async getStudentById(@Param('id') studentId: string) {
+  @UseGuards(StudentGuard)
+  @Post('enroll')
+  async enroll(@Req() { payload }, @Body() course: object) {
+    return await this.studentService.enroll(payload, course);
+  }
+
+  @UseGuards(StudentGuard)
+  @Get('search')
+  async searchStudentsBySchoolId(
+    @Req() { payload },
+    @Query('filter') filter: string,
+  ) {
+    return await this.studentService.searchStudentsBySchoolId(
+      payload._id,
+      filter,
+    );
+  }
+
+  @UseGuards(StudentGuard)
+  @Get('profile')
+  async getStudent(@Req() { payload }) {
+    return await this.studentService.getStudent(payload._id);
+  }
+
+  @UseGuards(StudentGuard)
+  @Get(':studentId')
+  async getStudentsById(@Param('studentId') studentId: string) {
     return await this.studentService.getStudentById(studentId);
   }
 
-  @Get('all/:id')
-  async getAllStudentsBySchoolId(@Param('id') schoolId: string) {
-    return await this.studentService.getAllStudentsBySchoolId(schoolId);
+  @UseGuards(StudentGuard)
+  @Get()
+  async getStudentsBySchoolId(
+    @Req() { payload },
+    // @Query('school') school: string,
+    // @Query('course') course: string,
+    // @Query('student') student: string,
+  ) {
+    return await this.studentService.getStudentsBySchoolId({
+      school: payload._id,
+    });
   }
 
   @Put(':id')
   async updateStudentById(
     @Param('id') studentId: string,
-    @Body() studentData: RegisterDto,
+    // @Body() studentData: RegisterDto,
   ) {
-    return await this.studentService.updateStudentById(studentId, studentData);
+    return await this.studentService.updateStudentById(studentId);
   }
 }

@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { SchoolController } from './school.controller';
 import SchoolService from './school.service';
+import AuthService from 'src/auth/auth.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { School, SchoolSchema } from './school.schema';
-import AuthService from 'src/auth/auth.service';
+import { SchoolController } from './school.controller';
 
 @Module({
   imports: [

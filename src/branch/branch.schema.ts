@@ -5,24 +5,18 @@ import { Attendance } from 'src/attendance/attendance.schema';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema({ timestamps: true })
-export class Course {
+export class Branch {
   @Prop({ required: true })
-  name: string;
-
-  @Prop({ required: true })
-  description: string;
-
-  @Prop({ required: true, default: 0 })
-  price: number;
+  address: string;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'School' })
   school: School;
 
-  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Student' }] })
-  students: Student[];
-
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Attendance' }] })
   attendances: Attendance[];
+
+  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Student' }] })
+  students: Student[];
 }
 
-export const CourseSchema = SchemaFactory.createForClass(Course);
+export const BranchSchema = SchemaFactory.createForClass(Branch);
