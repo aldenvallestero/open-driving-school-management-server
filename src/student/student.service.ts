@@ -180,6 +180,8 @@ class StudentService {
     try {
       console.log(`StudentService.register: ${JSON.stringify({ student })}`);
 
+      const { isCreatedBySchool } = student;
+
       const [studentId, school, branch, course] = await Promise.all([
         this.generateStudentId(student.school),
         this.schoolModel.findById(student.school),
@@ -213,6 +215,10 @@ class StudentService {
           $push: { students: student._id },
         }),
       ]);
+
+      if (isCreatedBySchool) {
+        return student;
+      }
 
       const token: string = this.authService.generateToken(student);
       return token;

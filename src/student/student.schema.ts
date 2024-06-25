@@ -33,10 +33,10 @@ export class Student {
   @Prop({ required: true })
   address: string;
 
-  @Prop({ required: true })
+  @Prop()
   gender: string;
 
-  @Prop({ required: true })
+  @Prop()
   birthday: string;
 
   @Prop()

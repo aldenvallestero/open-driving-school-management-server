@@ -1,4 +1,5 @@
 import {
+  Put,
   Req,
   Get,
   Post,
@@ -9,8 +10,8 @@ import {
   Controller,
 } from '@nestjs/common';
 
-import { BranchGuard } from './branch.guard';
 import BranchService from './branch.service';
+import { BranchGuard } from './branch.guard';
 
 @Controller('branch')
 export class BranchController {
@@ -18,14 +19,20 @@ export class BranchController {
 
   @UseGuards(BranchGuard)
   @Post()
-  async createBranch(@Req() { payload }, @Body() address) {
-    return await this.branchService.createBranch(payload, address);
+  async createBranch(@Req() { payload }, @Body() branch) {
+    return await this.branchService.createBranch(payload, branch);
   }
 
   @UseGuards(BranchGuard)
   @Get()
   async getAllBranchBySchoolId(@Req() { payload }) {
     return await this.branchService.getAllBranchBySchoolId(payload);
+  }
+
+  @UseGuards(BranchGuard)
+  @Put(':branchId')
+  async updateBranch(@Body() { address }, @Param('branchId') branchId: string) {
+    return await this.branchService.updateBranch(address, branchId);
   }
 
   @UseGuards(BranchGuard)

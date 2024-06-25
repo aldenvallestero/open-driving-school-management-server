@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { Model } from 'mongoose';
 import { Branch } from './branch.schema';
 import { Injectable } from '@nestjs/common';
@@ -13,19 +12,19 @@ class BranchService {
     @InjectModel(School.name) private schoolModel: Model<School>,
   ) {}
 
-  async createBranch(school, address): Promise<any> {
+  async createBranch(school, branch: any): Promise<any> {
     try {
-      console.log(
-        `BranchService.createBranch: ${JSON.stringify(school)} | ${address}`,
-      );
-      const branch = await new this.branchModel({
-        ...address,
+      console.log(`BranchService.createBranch: ${JSON.stringify(branch)}`);
+      const newBranch = await new this.branchModel({
+        address: branch.newBranchAddress,
+        contactPerson: branch.newBranchContactPerson,
+        contactNumber: branch.newBranchContactNumber,
         school: school._id,
       }).save();
       await this.schoolModel.updateOne({
         $push: { branches: branch._id },
       });
-      return branch;
+      return newBranch;
     } catch (error) {
       console.error(`BranchService.createBranch: ${JSON.stringify(error)}`);
       throw new HttpException('Internal Server Error', 500);
@@ -46,17 +45,35 @@ class BranchService {
     }
   }
 
-  async deleteBranch(school, branch): Promise<void> {
+  async deleteBranch(school, branchId): Promise<void> {
     try {
-      console.log(
-        `BranchService.deleteBranch: ${JSON.stringify({ school, branch })}`,
-      );
-      await this.branchModel.findByIdAndDelete(branch);
-      await this.schoolModel.updateOne({
-        $pull: { branches: branch },
-      });
+      console.log(`BranchService.deleteBranch: ${branchId}`);
+      await Promise.all([
+        this.branchModel.findByIdAndDelete(branchId),
+        this.schoolModel.updateOne({
+          $pull: { branches: branchId },
+        }),
+      ]);
     } catch (error) {
       console.error(`BranchService.deleteBranch: ${JSON.stringify(error)}`);
+      throw new HttpException('Internal Server Error', 500);
+    }
+  }
+
+  async updateBranch(address, branchId: string) {
+    try {
+      console.log(`BranchService.updateBranch: ${branchId}`);
+      const result = await this.branchModel.findByIdAndUpdate(
+        branchId,
+        {
+          address,
+        },
+        { new: true },
+      );
+
+      return result;
+    } catch (error) {
+      console.error(`BranchService.updateBranch: ${JSON.stringify(error)}`);
       throw new HttpException('Internal Server Error', 500);
     }
   }

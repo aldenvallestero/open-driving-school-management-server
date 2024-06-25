@@ -33,7 +33,7 @@ class AuthService {
   }
 
   async verifyToken(token: string) {
-    console.log(`AuthService.verifyToken: ${token}`);
+    console.log(`AuthService.verifyToken`);
     let payload;
     jwt.verify(token, this.publicKey, (error, decoded) => {
       if (error) {

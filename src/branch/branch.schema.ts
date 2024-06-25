@@ -9,6 +9,12 @@ export class Branch {
   @Prop({ required: true })
   address: string;
 
+  @Prop()
+  contactNumber: string;
+
+  @Prop()
+  contactPerson: string;
+
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'School' })
   school: School;
 
