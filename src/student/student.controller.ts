@@ -5,16 +5,15 @@ import {
   Post,
   Body,
   Param,
+  Query,
   UsePipes,
   UseGuards,
   Controller,
   ValidationPipe,
-  Query,
 } from '@nestjs/common';
-import { LoginDto } from './dto/login.dto';
+import { RegisterDto, LoginDto } from './dto';
 import StudentService from './student.service';
 import { StudentGuard } from './student.guard';
-import { RegisterDto } from './dto/register.dto';
 
 @UsePipes(new ValidationPipe())
 @Controller('student')

@@ -10,8 +10,8 @@ import {
   Param,
 } from '@nestjs/common';
 import SchoolService from './school.service';
-import { LoginDto, RegisterDto } from './dto';
 import { SchoolGuard } from './school.guard';
+import { LoginDto, RegisterDto } from './dto';
 
 @UsePipes(new ValidationPipe())
 @Controller('school')

@@ -1,6 +1,6 @@
-/* eslint-disable prettier/prettier */
 import { Model } from 'mongoose';
 import { Student } from './student.schema';
+import ShortUniqueId from 'short-unique-id';
 import { Injectable } from '@nestjs/common';
 import { HttpException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
@@ -12,6 +12,8 @@ import { Enrollment } from 'src/enrollment/enrollment.schema';
 
 @Injectable()
 class StudentService {
+  uid: ShortUniqueId;
+
   constructor(
     @InjectModel(School.name) private schoolModel: Model<School>,
     @InjectModel(Branch.name) private branchModel: Model<Branch>,
@@ -19,7 +21,9 @@ class StudentService {
     @InjectModel(Student.name) private studentModel: Model<Student>,
     @InjectModel(Enrollment.name) private enrollmentModel: Model<Enrollment>,
     private readonly authService: AuthService,
-  ) {}
+  ) {
+    this.uid = new ShortUniqueId({ length: 10, dictionary: 'alphanum_upper' });
+  }
 
   private paginate(data) {
     return data;
@@ -51,6 +55,10 @@ class StudentService {
     }
 
     return result;
+  }
+
+  private generateStudentPassword(): string {
+    return this.uid.rnd();
   }
 
   async getStudent(studentId: string) {
@@ -205,11 +213,14 @@ class StudentService {
 
       if (isCreatedBySchool) {
         student.status = 'Verified';
+        student.password = this.generateStudentPassword();
+        student.temporaryPassword = student.password;
       }
 
       await student.save();
 
       if (isCreatedBySchool) {
+        // TODO: Send an email to student
         return student;
       }
 
