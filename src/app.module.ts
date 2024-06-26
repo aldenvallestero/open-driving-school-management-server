@@ -10,6 +10,8 @@ import { StudentModule } from './student/student.module';
 import { HealthController } from './health/health.controller';
 import { AttendanceModule } from './attendance/attendance.module';
 import { EnrollmentModule } from './enrollment/enrollment.module';
+import { EmailModule } from './email/email.module';
+import { SmsModule } from './sms/sms.module';
 
 @Module({
   imports: [
@@ -25,6 +27,8 @@ import { EnrollmentModule } from './enrollment/enrollment.module';
     StudentModule,
     AttendanceModule,
     EnrollmentModule,
+    EmailModule,
+    SmsModule,
   ],
   controllers: [HealthController],
   providers: [],
