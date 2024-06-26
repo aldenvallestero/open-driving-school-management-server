@@ -26,7 +26,6 @@ class StudentService {
   }
 
   private async generateStudentId(school: string): Promise<string> {
-    console.log(`StudentService.generateStudentId: ${school}`);
     const year: string = new Date().getFullYear().toString().substring(2);
     let studentCount: number | string = await this.studentModel.countDocuments({
       school,
@@ -56,8 +55,6 @@ class StudentService {
 
   async getStudent(studentId: string) {
     try {
-      console.log(`StudentService.getStudentById: ${studentId}`);
-
       const result = await this.studentModel
         .findById(studentId)
         .populate('courses')
@@ -78,8 +75,6 @@ class StudentService {
 
   async getStudentById(studentId: string) {
     try {
-      console.log(`StudentService.getStudentById: ${studentId}`);
-
       const result: any = await this.studentModel
         .findById(studentId)
         .populate('courses')
@@ -105,8 +100,6 @@ class StudentService {
    */
   async getStudentByStudentId(studentId: string) {
     try {
-      console.log(`StudentService.getStudentByStudentId: ${studentId}`);
-
       const result: any = await this.studentModel
         .findOne({ studentId })
         .populate('courses')
@@ -154,19 +147,15 @@ class StudentService {
 
   async updateStudentById(studentId) {
     try {
-      console.log(`StudentService.updateStudentById: ${studentId}`);
-
       // const result = await this.prisma.student.update({
       //   where: {
       //     id: studentId,
       //   },
       //   data: student,
       // });
-
       // if (!result) {
       //   throw new HttpException('Student not found!', 404);
       // }
-
       // return result;
     } catch (error) {
       console.error(
@@ -178,8 +167,6 @@ class StudentService {
 
   async register(student): Promise<string> {
     try {
-      console.log(`StudentService.register: ${JSON.stringify({ student })}`);
-
       const { isCreatedBySchool } = student;
 
       const [studentId, school, branch, course] = await Promise.all([
@@ -189,7 +176,7 @@ class StudentService {
         this.courseModel.findById(student.course),
       ]);
 
-      student = await new this.studentModel({ studentId, ...student }).save();
+      student = new this.studentModel({ studentId, ...student });
 
       const enrollment = await new this.enrollmentModel({
         school: school._id,
@@ -217,6 +204,12 @@ class StudentService {
       ]);
 
       if (isCreatedBySchool) {
+        student.status = 'Verified';
+      }
+
+      await student.save();
+
+      if (isCreatedBySchool) {
         return student;
       }
 
@@ -230,7 +223,6 @@ class StudentService {
 
   async login({ email, password }): Promise<string> {
     try {
-      console.log(`StudentService.login: ${email}`);
       const student: Student = await this.studentModel
         .findOne({ email, password })
         .exec();
@@ -249,7 +241,6 @@ class StudentService {
 
   async enroll(student, course) {
     try {
-      console.log(`StudentService.enroll: ${student.name} | ${student.email}`);
       await student.updateOne({
         $push: { courses: course._id },
       });

@@ -14,7 +14,6 @@ class SchoolService {
 
   async register(school): Promise<string> {
     try {
-      console.log(`SchoolService.register: ${school.name} | ${school.email}`);
       school = await new this.schoolModel(school).save();
       const token: string = this.authService.generateToken(school);
       return token;
@@ -26,7 +25,6 @@ class SchoolService {
 
   async login({ email, password }): Promise<string> {
     try {
-      console.log(`SchoolService.login: ${email}`);
       const school: School = await this.schoolModel
         .findOne({ email, password })
         .exec();
@@ -45,8 +43,6 @@ class SchoolService {
 
   async getSchool(payload): Promise<any> {
     try {
-      console.log(`SchoolService.getSchool: ${JSON.stringify(payload)}`);
-
       const result = await this.schoolModel.findById(payload._id).exec();
 
       return result;
@@ -58,8 +54,6 @@ class SchoolService {
 
   async getSchoolById(school): Promise<any> {
     try {
-      console.log(`SchoolService.getSchoolById: ${school}`);
-
       const result = await this.schoolModel
         .findById(school)
         .populate('courses')
@@ -72,9 +66,7 @@ class SchoolService {
     }
   }
 
-  validateToken(token: string) {
-    console.log(`TokenService.validateToken: ${token}`);
-  }
+  validateToken(token: string) {}
 }
 
 export default SchoolService;

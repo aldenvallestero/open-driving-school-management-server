@@ -9,8 +9,11 @@ import { Attendance } from 'src/attendance/attendance.schema';
 
 @Schema({ timestamps: true })
 export class Enrollment {
-  @Prop({ required: true, default: 'Active' })
+  @Prop({ required: true, default: 'ACTIVE' })
   status: string;
+
+  @Prop({ required: true, default: 'UNPAID' })
+  paymentStatus: string;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'School' })
   school: School;

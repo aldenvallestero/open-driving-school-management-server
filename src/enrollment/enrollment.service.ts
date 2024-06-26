@@ -10,9 +10,6 @@ export class EnrollmentService {
   ) {}
 
   async createEnrollment(student, course) {
-    console.log(
-      `EnrollmentService.createEnrollment: ${JSON.stringify(student)} | ${JSON.stringify(course)}`,
-    );
     const enrollment = await new this.enrollmentModel({
       school: student.school,
       branch: student.branch,

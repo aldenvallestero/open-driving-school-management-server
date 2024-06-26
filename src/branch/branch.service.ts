@@ -14,7 +14,6 @@ class BranchService {
 
   async createBranch(school, branch: any): Promise<any> {
     try {
-      console.log(`BranchService.createBranch: ${JSON.stringify(branch)}`);
       const newBranch = await new this.branchModel({
         address: branch.newBranchAddress,
         contactPerson: branch.newBranchContactPerson,
@@ -33,9 +32,6 @@ class BranchService {
 
   async getAllBranchBySchoolId({ _id }): Promise<any> {
     try {
-      console.log(
-        `BranchService.getAllBranchBySchoolId: ${JSON.stringify(_id)}`,
-      );
       const school: string = _id;
       const result = await this.branchModel.find({ school });
       return result;
@@ -47,7 +43,6 @@ class BranchService {
 
   async deleteBranch(school, branchId): Promise<void> {
     try {
-      console.log(`BranchService.deleteBranch: ${branchId}`);
       await Promise.all([
         this.branchModel.findByIdAndDelete(branchId),
         this.schoolModel.updateOne({
@@ -62,7 +57,6 @@ class BranchService {
 
   async updateBranch(address, branchId: string) {
     try {
-      console.log(`BranchService.updateBranch: ${branchId}`);
       const result = await this.branchModel.findByIdAndUpdate(
         branchId,
         {

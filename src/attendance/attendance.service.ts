@@ -24,10 +24,6 @@ export class AttendanceService {
   }
 
   async createAttendance(payload, attendance) {
-    console.log(
-      `AttendanceService.createAttendance: ${JSON.stringify(attendance)}`,
-    );
-
     const student = await this.studentService.getStudentByStudentId(
       attendance.student,
     );
@@ -186,10 +182,6 @@ export class AttendanceService {
     createdAt = undefined,
     keywords = undefined,
   ) {
-    console.log(
-      `AttendanceService.searchAttendance: ${JSON.stringify({ school, createdAt, keywords })}`,
-    );
-
     const attendance = await this.attendanceModel
       .find({
         where: {

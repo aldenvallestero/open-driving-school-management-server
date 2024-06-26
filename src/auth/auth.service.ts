@@ -17,7 +17,6 @@ class AuthService {
 
   generateToken(payload: object) {
     try {
-      console.log(`AuthService.generateToken`);
       const token: string = jwt.sign(
         JSON.stringify(payload),
         this.privateKey,
@@ -26,14 +25,12 @@ class AuthService {
 
       return token;
     } catch (error) {
-      console.log(error);
       console.error(`AuthService.generateToken: ${JSON.stringify(error)}`);
       throw new HttpException('Internal Server Error', 500);
     }
   }
 
   async verifyToken(token: string) {
-    console.log(`AuthService.verifyToken`);
     let payload;
     jwt.verify(token, this.publicKey, (error, decoded) => {
       if (error) {

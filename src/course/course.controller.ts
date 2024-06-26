@@ -27,7 +27,6 @@ export class CourseController {
   @UseGuards(CourseGuard)
   @Post()
   async create(@Req() { payload }, @Body() createDto: CreateDto) {
-    console.log('123123123');
     return await this.courseService.createCourse({
       ...createDto,
       school: payload,

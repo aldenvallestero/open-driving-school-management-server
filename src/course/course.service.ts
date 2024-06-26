@@ -13,7 +13,6 @@ export class CourseService {
 
   async createCourse(course): Promise<any> {
     try {
-      console.log(`CourseService.createCourse: ${JSON.stringify(course)}`);
       const result = await new this.courseModel(course).save();
       await this.schoolModel.findByIdAndUpdate(course.school._id, {
         $addToSet: { courses: result._id },
@@ -35,7 +34,6 @@ export class CourseService {
 
   async getAllCoursesBySchoolId(payload) {
     try {
-      console.log(`CourseService.getAllCoursesBySchoolId`);
       const schoolId = payload?.school || payload._id; // find the schoolId
       const { courses } = await this.schoolModel
         .findById(schoolId)
@@ -53,7 +51,6 @@ export class CourseService {
 
   async getAllCoursesByStudentId(id: string) {
     try {
-      console.log(`CourseService.getAllCoursesByStudentId: ${id}`);
       // const result = await this.enrolleeModel
       //   .findById(id)
       //   .populate('course')
@@ -69,7 +66,6 @@ export class CourseService {
 
   async updateCourse(id: string, course: object): Promise<any> {
     try {
-      console.log(`CourseService.updateCourse`);
       return await this.courseModel.findByIdAndUpdate(id, course, {
         new: true,
       });

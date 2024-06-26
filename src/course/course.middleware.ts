@@ -22,7 +22,6 @@ export class CourseMiddleware implements NestMiddleware {
       .findById(schoolId)
       .populate('courses');
 
-    console.log('courses', courses);
     if (courses?.length > 5) {
       throw new BadRequestException('Too much courses were created!');
     }
