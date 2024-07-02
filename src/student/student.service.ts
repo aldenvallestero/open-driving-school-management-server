@@ -146,18 +146,21 @@ class StudentService {
     return this.paginate(filteredStudents);
   }
 
-  async updateStudentById(studentId) {
+  async updateStudentById(studentId, studentData) {
     try {
-      // const result = await this.prisma.student.update({
-      //   where: {
-      //     id: studentId,
-      //   },
-      //   data: student,
-      // });
-      // if (!result) {
-      //   throw new HttpException('Student not found!', 404);
-      // }
-      // return result;
+      delete studentData.studentId;
+
+      const result = await this.studentModel.findByIdAndUpdate(
+        studentId,
+        studentData,
+        { new: true },
+      );
+
+      if (!result) {
+        throw new HttpException('Student not found!', 404);
+      }
+
+      return result;
     } catch (error) {
       console.error(
         `StudentService.updateStudentById: ${JSON.stringify(error)}`,
