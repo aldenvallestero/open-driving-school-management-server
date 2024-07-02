@@ -1,5 +1,4 @@
 import { Model } from 'mongoose';
-import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Attendance } from './attendance.schema';
 import { School } from 'src/school/school.schema';
@@ -7,6 +6,12 @@ import { Branch } from 'src/branch/branch.schema';
 import { Course } from 'src/course/course.schema';
 import StudentService from 'src/student/student.service';
 import { Enrollment } from 'src/enrollment/enrollment.schema';
+
+import {
+  Injectable,
+  ConflictException,
+  NotFoundException,
+} from '@nestjs/common';
 
 @Injectable()
 export class AttendanceService {
@@ -23,10 +28,31 @@ export class AttendanceService {
     return data;
   }
 
+  private async isNewAttendanceConflict(studentAttendances, newAttendance) {
+    studentAttendances.forEach((i) => {
+      const isDateTimeConflict =
+        new Date(i.in) >= newAttendance.in &&
+        new Date(i.in) <= newAttendance.out &&
+        new Date(i.out) >= newAttendance.in &&
+        new Date(i.out) <= newAttendance.out;
+
+      if (isDateTimeConflict) {
+        throw new ConflictException(
+          'Date & Time already occupied with student attendance',
+        );
+      }
+    });
+    return;
+  }
+
   async createAttendance(payload, attendance) {
     const student = await this.studentService.getStudentByStudentId(
       attendance.student,
     );
+
+    if (!student) {
+      throw new NotFoundException('Student not found!');
+    }
 
     attendance.createdAt = attendance.date;
     attendance.student = student._id.toString();
@@ -36,11 +62,10 @@ export class AttendanceService {
       (x) => x.status === 'Active',
     )[0];
 
-    attendance.enrollment = attendance.enrollment._id.toString();
     attendance.course = attendance.enrollment.course._id.toString();
+    attendance.enrollment = attendance.enrollment._id.toString();
     attendance.date = new Date(attendance.date);
     attendance.school = payload._id.toString();
-    attendance.hours = attendance.out.getHours() - attendance.in.getHours();
 
     const [year, month, day] = await Promise.all([
       new Date(attendance.date).getFullYear(),
@@ -64,12 +89,16 @@ export class AttendanceService {
       attendance.out.split(':')[1],
     );
 
+    attendance.hours = (attendance.out - attendance.in) / (1000 * 60 * 60);
+
+    await this.isNewAttendanceConflict(student.attendances, attendance);
+
     attendance = await new this.attendanceModel(attendance).save();
 
     const [school, branch, course, enrollment] = await Promise.all([
       this.schoolModel.findById(student.school),
       this.branchModel.findById(student.branch),
-      this.courseModel.findById(attendance),
+      this.courseModel.findById(attendance.course),
       this.enrollmentModel.findById(student.enrollment),
     ]);
 

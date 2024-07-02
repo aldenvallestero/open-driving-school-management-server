@@ -103,6 +103,7 @@ class StudentService {
       const result: any = await this.studentModel
         .findOne({ studentId })
         .populate('courses')
+        .populate('attendances')
         .populate({
           path: 'enrollment',
           populate: {

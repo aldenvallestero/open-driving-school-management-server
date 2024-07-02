@@ -75,10 +75,7 @@ export class StudentController {
   }
 
   @Put(':id')
-  async updateStudentById(
-    @Param('id') studentId: string,
-    // @Body() studentData: RegisterDto,
-  ) {
-    return await this.studentService.updateStudentById(studentId);
+  async updateStudentById(@Param('id') studentId: string, @Body() studentData) {
+    return await this.studentService.updateStudentById(studentId, studentData);
   }
 }
