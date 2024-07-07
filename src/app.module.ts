@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { NoteModule } from './note/note.module';
 import { ExamModule } from './exam/exam.module';
 import { AuthModule } from './auth/auth.module';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -21,6 +22,7 @@ import { SmsModule } from './sms/sms.module';
     ConfigModule.forRoot({ envFilePath: '.env', isGlobal: true }),
     ExamModule,
     AuthModule,
+    NoteModule,
     CourseModule,
     BranchModule,
     SchoolModule,
