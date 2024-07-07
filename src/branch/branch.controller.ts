@@ -30,6 +30,12 @@ export class BranchController {
   }
 
   @UseGuards(BranchGuard)
+  @Get(':branchId')
+  async getBranchById(@Param('branchId') branchId: string) {
+    return await this.branchService.getBranchById(branchId);
+  }
+
+  @UseGuards(BranchGuard)
   @Put(':branchId')
   async updateBranch(@Body() { address }, @Param('branchId') branchId: string) {
     return await this.branchService.updateBranch(address, branchId);

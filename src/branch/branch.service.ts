@@ -41,6 +41,16 @@ class BranchService {
     }
   }
 
+  async getBranchById(branchId: string): Promise<any> {
+    try {
+      const result = await this.branchModel.findById(branchId).exec();
+      return result;
+    } catch (error) {
+      console.error(`BranchService.createBranch: ${JSON.stringify(error)}`);
+      throw new HttpException('Internal Server Error', 500);
+    }
+  }
+
   async deleteBranch(school, branchId): Promise<void> {
     try {
       await Promise.all([
