@@ -1,8 +1,10 @@
 import mongoose from 'mongoose';
-import { Branch } from 'src/branch/branch.schema';
-import { Course } from 'src/course/course.schema';
-import { Student } from 'src/student/student.schema';
-import { Attendance } from 'src/attendance/attendance.schema';
+import { Note } from '../note/note.schema';
+import { Branch } from '../branch/branch.schema';
+import { Course } from '../course/course.schema';
+import { Student } from '../student/student.schema';
+import { Vehicle } from 'src/vehicle/vehicle.schema';
+import { Attendance } from '../attendance/attendance.schema';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema({ timestamps: true })
@@ -30,6 +32,12 @@ export class School {
 
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Attendance' }] })
   attendances: Attendance[];
+
+  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Note' }] })
+  notes: Note[];
+
+  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Vehicle' }] })
+  vehicles: Vehicle[];
 }
 
 export const SchoolSchema = SchemaFactory.createForClass(School);

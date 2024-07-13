@@ -7,8 +7,8 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { Request, Response, NextFunction } from 'express';
 import { Model } from 'mongoose';
-import AuthService from 'src/auth/auth.service';
-import { School } from 'src/school/school.schema';
+import AuthService from '../auth/auth.service';
+import { School } from '../school/school.schema';
 
 @Injectable()
 export class CourseMiddleware implements NestMiddleware {

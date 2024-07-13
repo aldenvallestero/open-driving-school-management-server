@@ -1,14 +1,14 @@
 /* eslint-disable prettier/prettier */
 import { Model } from 'mongoose';
 import { Student } from './student.schema';
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { HttpException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import AuthService from 'src/auth/auth.service';
-import { Branch } from 'src/branch/branch.schema';
-import { School } from 'src/school/school.schema';
-import { Course } from 'src/course/course.schema';
-import { Enrollment } from 'src/enrollment/enrollment.schema';
+import AuthService from '../auth/auth.service';
+import { Branch } from '../branch/branch.schema';
+import { School } from '../school/school.schema';
+import { Course } from '../course/course.schema';
+import { Enrollment } from '../enrollment/enrollment.schema';
 
 @Injectable()
 class StudentService {
@@ -51,6 +51,18 @@ class StudentService {
     }
 
     return result;
+  }
+
+  private async isEmailExist({ email }) {
+    const student = await this.studentModel
+      .findOne({
+        email,
+      })
+      .exec();
+
+    if (student) {
+      throw new ConflictException('Email already in use');
+    }
   }
 
   async getStudent(studentId: string) {
@@ -172,6 +184,8 @@ class StudentService {
   async register(student): Promise<string> {
     try {
       const { isCreatedBySchool } = student;
+
+      await this.isEmailExist(student);
 
       const [studentId, school, branch, course] = await Promise.all([
         this.generateStudentId(student.school),

@@ -1,11 +1,11 @@
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Attendance } from './attendance.schema';
-import { School } from 'src/school/school.schema';
-import { Branch } from 'src/branch/branch.schema';
-import { Course } from 'src/course/course.schema';
-import StudentService from 'src/student/student.service';
-import { Enrollment } from 'src/enrollment/enrollment.schema';
+import { School } from '../school/school.schema';
+import { Branch } from '../branch/branch.schema';
+import { Course } from '../course/course.schema';
+import StudentService from '../student/student.service';
+import { Enrollment } from '../enrollment/enrollment.schema';
 
 import {
   Injectable,

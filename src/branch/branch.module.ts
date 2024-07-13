@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import BranchService from './branch.service';
-import AuthService from 'src/auth/auth.service';
+import AuthService from '../auth/auth.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { BranchController } from './branch.controller';
 import { Branch, BranchSchema } from './branch.schema';
-import { School, SchoolSchema } from 'src/school/school.schema';
+import { School, SchoolSchema } from '../school/school.schema';
 
 @Module({
   imports: [

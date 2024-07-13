@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { NoteService } from './note.service';
-import AuthService from 'src/auth/auth.service';
+import AuthService from '../auth/auth.service';
 import { Note, NoteSchema } from './note.schema';
 import { MongooseModule } from '@nestjs/mongoose';
 import { NoteController } from './note.controller';
-import { School, SchoolSchema } from 'src/school/school.schema';
+import { School, SchoolSchema } from '../school/school.schema';
 
 @Module({
   imports: [

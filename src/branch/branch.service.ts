@@ -3,7 +3,7 @@ import { Branch } from './branch.schema';
 import { Injectable } from '@nestjs/common';
 import { HttpException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { School } from 'src/school/school.schema';
+import { School } from '../school/school.schema';
 
 @Injectable()
 class BranchService {
@@ -14,18 +14,20 @@ class BranchService {
 
   async createBranch(school, branch: any): Promise<any> {
     try {
-      const newBranch = await new this.branchModel({
+      const result = await new this.branchModel({
         address: branch.newBranchAddress,
         contactPerson: branch.newBranchContactPerson,
         contactNumber: branch.newBranchContactNumber,
         school: school._id,
       }).save();
-      await this.schoolModel.updateOne({
-        $push: { branches: branch._id },
+
+      await this.schoolModel.findByIdAndUpdate(school._id, {
+        $addToSet: { branches: result._id },
       });
-      return newBranch;
+
+      return result;
     } catch (error) {
-      console.error(`BranchService.createBranch: ${JSON.stringify(error)}`);
+      console.error(`BranchService.createBranch: ${error}`);
       throw new HttpException('Internal Server Error', 500);
     }
   }

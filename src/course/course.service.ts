@@ -1,7 +1,7 @@
 import { Model } from 'mongoose';
 import { Course } from './course.schema';
 import { InjectModel } from '@nestjs/mongoose';
-import { School } from 'src/school/school.schema';
+import { School } from '../school/school.schema';
 import { HttpException, Injectable } from '@nestjs/common';
 
 @Injectable()

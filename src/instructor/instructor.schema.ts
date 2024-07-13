@@ -5,7 +5,7 @@ import { Attendance } from '../attendance/attendance.schema';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema({ timestamps: true })
-export class Branch {
+export class Instructor {
   @Prop({ required: true })
   address: string;
 
@@ -25,4 +25,4 @@ export class Branch {
   students: Student[];
 }
 
-export const BranchSchema = SchemaFactory.createForClass(Branch);
+export const InstructorSchema = SchemaFactory.createForClass(Instructor);

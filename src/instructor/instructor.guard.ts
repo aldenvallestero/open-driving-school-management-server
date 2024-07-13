@@ -7,7 +7,7 @@ import {
 import AuthService from '../auth/auth.service';
 
 @Injectable()
-export class AttendanceGuard implements CanActivate {
+export class InstructorGuard implements CanActivate {
   constructor(private readonly authService: AuthService) {}
   async canActivate(context: ExecutionContext) {
     const request = context.switchToHttp().getRequest();

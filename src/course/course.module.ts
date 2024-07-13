@@ -4,13 +4,13 @@ import {
   NestModule,
   RequestMethod,
 } from '@nestjs/common';
-import AuthService from 'src/auth/auth.service';
+import AuthService from '../auth/auth.service';
 import { CourseService } from './course.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CourseController } from './course.controller';
 import { Course, CourseSchema } from './course.schema';
 import { CourseMiddleware } from './course.middleware';
-import { School, SchoolSchema } from 'src/school/school.schema';
+import { School, SchoolSchema } from '../school/school.schema';
 
 @Module({
   imports: [

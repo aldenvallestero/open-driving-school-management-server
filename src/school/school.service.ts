@@ -43,11 +43,24 @@ class SchoolService {
 
   async getSchool(payload): Promise<any> {
     try {
-      const result = await this.schoolModel.findById(payload._id).exec();
+      const result = await this.schoolModel
+        .findById(payload._id)
+        .populate('notes')
+        .populate('courses')
+        .populate('branches')
+        .populate('vehicles')
+        .populate('attendances')
+        .populate({
+          path: 'students',
+          populate: {
+            path: 'branch',
+          },
+        })
+        .exec();
 
       return result;
     } catch (error) {
-      console.error(`SchoolService.getSchool: ${JSON.stringify(error)}`);
+      console.error(`SchoolService.getSchool: ${error}`);
       throw new HttpException('Internal Server Error', 500);
     }
   }

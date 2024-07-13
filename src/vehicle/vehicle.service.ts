@@ -14,16 +14,19 @@ class VehicleService {
 
   async createVehicle(school, vehicle: any): Promise<any> {
     try {
+      console.log('vehicle', vehicle);
       const result = await new this.vehicleModel({
-        ...vehicle,
+        model: vehicle.newVehicleModel,
+        type: vehicle.newVehicleType,
         school: school._id,
       }).save();
 
-      new Promise(() => {
-        this.schoolModel.findByIdAndUpdate(school._id, {
-          $addToSet: { vehicles: result._id },
-        });
+      console.log('school._id', school._id);
+      // new Promise(() => {
+      await this.schoolModel.findByIdAndUpdate(school._id, {
+        $addToSet: { vehicles: result._id },
       });
+      // });
 
       return result;
     } catch (error) {

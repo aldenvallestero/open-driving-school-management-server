@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 import StudentService from './student.service';
-import AuthService from 'src/auth/auth.service';
+import AuthService from '../auth/auth.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { StudentController } from './student.controller';
 import { Student, StudentSchema } from './student.schema';
-import { School, SchoolSchema } from 'src/school/school.schema';
-import { Course, CourseSchema } from 'src/course/course.schema';
-import { Branch, BranchSchema } from 'src/branch/branch.schema';
-import { Enrollment, EnrollmentSchema } from 'src/enrollment/enrollment.schema';
+import { School, SchoolSchema } from '../school/school.schema';
+import { Course, CourseSchema } from '../course/course.schema';
+import { Branch, BranchSchema } from '../branch/branch.schema';
+import { Enrollment, EnrollmentSchema } from '../enrollment/enrollment.schema';
 
 @Module({
   imports: [

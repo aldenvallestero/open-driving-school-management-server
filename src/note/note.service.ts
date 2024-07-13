@@ -1,7 +1,7 @@
 import { Model } from 'mongoose';
 import { Note } from './note.schema';
 import { InjectModel } from '@nestjs/mongoose';
-import { School } from 'src/school/school.schema';
+import { School } from '../school/school.schema';
 import { HttpException, Injectable } from '@nestjs/common';
 
 @Injectable()
@@ -15,25 +15,25 @@ export class NoteService {
     try {
       const result = await new this.noteModel(note).save();
 
-      new Promise(() => {
-        if (result.course) {
-          this.schoolModel.findByIdAndUpdate(note.course, {
-            $addToSet: { notes: result.course },
-          });
-        }
+      // new Promise(() => {
+      if (result.course) {
+        await this.schoolModel.findByIdAndUpdate(note.course, {
+          $addToSet: { notes: result.course },
+        });
+      }
 
-        if (result.branch) {
-          this.schoolModel.findByIdAndUpdate(note.branch, {
-            $addToSet: { notes: result.branch },
-          });
-        }
+      if (result.branch) {
+        await this.schoolModel.findByIdAndUpdate(note.branch, {
+          $addToSet: { notes: result.branch },
+        });
+      }
 
-        if (result.school) {
-          this.schoolModel.findByIdAndUpdate(note.school, {
-            $addToSet: { notes: result.school },
-          });
-        }
-      });
+      if (result.school) {
+        await this.schoolModel.findByIdAndUpdate(note.school, {
+          $addToSet: { notes: result.school },
+        });
+      }
+      // });
 
       return result;
     } catch (error) {

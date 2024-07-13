@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
-import { School } from 'src/school/school.schema';
-import { Student } from 'src/student/student.schema';
-import { Attendance } from 'src/attendance/attendance.schema';
+import { School } from '../school/school.schema';
+import { Student } from '../student/student.schema';
+import { Attendance } from '../attendance/attendance.schema';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema({ timestamps: true })
